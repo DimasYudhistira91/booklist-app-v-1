@@ -1,6 +1,6 @@
 // Book Class : Represents a Book
 
-class Book {
+class Buku {
   constructor(judul, penulis, isbn) {
     this.judul = judul;
     this.penulis = penulis;
@@ -43,6 +43,12 @@ class UI {
 
     list.appendChild(row);
   }
+
+  static clearFields() {
+    document.querySelector('#judul').value = "";
+    document.querySelector('#penulis').value = "";
+    document.querySelector('#isbn').value = "";
+  }
 }
 
 // Store Class : Handles storage
@@ -51,7 +57,10 @@ class UI {
 document.addEventListener('DOMContentLoaded', UI.tampilBuku);
 
 // Event : Add Book
-document.querySelector('#buku-form').addEventListener('submit', (e) => {
+document.querySelector('#book-form').addEventListener('submit', (e) => {
+
+  e.preventDefault();
+
   // get form value
 
   const judul = document.querySelector('#judul').value;
@@ -59,7 +68,13 @@ document.querySelector('#buku-form').addEventListener('submit', (e) => {
   const isbn = document.querySelector('#isbn').value;
 
   // Initiate Book
-  const buku = new buku(judul, penulis, isbn);
+  const buku = new Buku(judul, penulis, isbn);
+
+  // Masukkan buku ke daftar
+  UI.addBookToList(buku);
+
+  // Clear fields
+  UI.clearFields;
 
 
 });
