@@ -1,43 +1,32 @@
 // Book Class : Represents a Book
 
 class Buku {
-  constructor(judul, penulis, isbn) {
+  constructor(judul, penulis, nomorReg) {
     this.judul = judul;
     this.penulis = penulis;
-    this.isbn = isbn;
+    this.nomorReg = nomorReg;
   }
 }
 
-// UI Class : handle ui class
+// UI Class : handle UI class
 
 class UI {
   static tampilBuku() {
-    const simpanBuku = [
-      {
-        judul: 'Buku 1',
-        penulis: 'dul kempit',
-        isbn: '12324sdf34'
-      },
-      {
-        judul: 'Buku 2',
-        penulis: 'karto tuying',
-        isbn: '723481kjsd'
-      }
-    ];
+    const simpanBuku = [];
 
-    const bukuBuku = simpanBuku;
+    const listBuku = simpanBuku;
 
-    bukuBuku.forEach((buku) => UI.addBookToList(buku));
+    listBuku.forEach((i) => UI.addBookToList(i));
   }
-  static addBookToList(buku) {
+  static addBookToList(i) {
     const list = document.querySelector('#book-list');
 
     const row = document.createElement('tr');
 
     row.innerHTML = `
-    <td>${buku.judul}</td>
-    <td>${buku.penulis}</td>
-    <td>${buku.isbn}</td>
+    <td>${i.judul}</td>
+    <td>${i.penulis}</td>
+    <td>${i.nomorReg}</td>
     <td><a href="#" class="btn btn-danger btn-sm delete">x</a></td>
     `;
 
@@ -47,7 +36,13 @@ class UI {
   static clearFields() {
     document.querySelector('#judul').value = "";
     document.querySelector('#penulis').value = "";
-    document.querySelector('#isbn').value = "";
+    document.querySelector('#nomorReg').value = "";
+  }
+
+  static deleteBuku(el) {
+    if(el.classList.contains('delete')) {
+      el.parentElement.parentElement.remove();
+    }
   }
 }
 
@@ -65,18 +60,21 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
 
   const judul = document.querySelector('#judul').value;
   const penulis = document.querySelector('#penulis').value;
-  const isbn = document.querySelector('#isbn').value;
+  const nomorReg = document.querySelector('#nomorReg').value;
 
   // Initiate Book
-  const buku = new Buku(judul, penulis, isbn);
+  const buku = new Buku(judul, penulis, nomorReg);
 
   // Masukkan buku ke daftar
   UI.addBookToList(buku);
 
   // Clear fields
-  UI.clearFields;
+  UI.clearFields();
 
 
 });
 
 // Event : Remove Book
+document.querySelector('#book-list').addEventListener('click', (e) => {
+  UI.deleteBuku(e.target);
+});
