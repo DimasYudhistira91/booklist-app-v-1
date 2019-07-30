@@ -12,9 +12,7 @@ class Buku {
 
 class UI {
   static tampilBuku() {
-    const simpanBuku = [];
-
-    const listBuku = simpanBuku;
+    const listBuku = Store.ambilBuku();
 
     listBuku.forEach((i) => UI.addBookToList(i));
   }
@@ -59,6 +57,33 @@ class UI {
 }
 
 // Store Class : Handles storage
+class Store {
+  static ambilBuku() {
+    let listBuku;
+    if(localStorage.getItem('listBuku') === null) {
+      listBuku = [];
+    } else {
+      listBuku = JSON.parse(localStorage.getItem('listBuku'));
+    }
+    return listBuku;
+  }
+
+  static tambahBuku(buku) {
+    const listBuku = Store.ambilBuku();
+    listBuku.push(buku);
+    localStorage.setItem('listBuku', JSON.stringify(listBuku));
+  }
+
+  static hapusBuku(nomorReg) {
+    const listBuku = Store.ambilBuku();
+    listBuku.forEach((buku, index) => {
+      if(buku.nomorReg === nomorReg) {
+        listBuku.splice(index, 1);
+    }
+  });
+  localStorage.setItem('listBuku',JSON.stringify(listBuku));
+}
+}
 
 // Event : DIsplay Books
 document.addEventListener('DOMContentLoaded', UI.tampilBuku);
@@ -84,6 +109,9 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
     // Masukkan buku ke daftar
     UI.addBookToList(buku);
 
+    // Tambah buku ke Store
+    Store.tambahBuku(buku);
+
     // Tampilkan jika berhasil
     UI.tampilAlert('Buku berhasil ditambahkan', 'success');
   
@@ -94,7 +122,11 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
 
 // Event : Remove Book
 document.querySelector('#book-list').addEventListener('click', (e) => {
+  // Hapus buku dari UI
   UI.deleteBuku(e.target);
+
+  // Hapus buku dari Store
+  Store.hapusBuku(e.target.parentElement.previousElementSibling.textContent);
 
   // Tampilkan jika berhasil dihapus
   UI.tampilAlert('Buku berhasil dihapus', 'warning');
