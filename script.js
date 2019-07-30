@@ -44,6 +44,18 @@ class UI {
       el.parentElement.parentElement.remove();
     }
   }
+
+  static tampilAlert(message, className) {
+    const div = document.createElement('div');
+    div.className= `alert alert-${className}`;
+    div.appendChild(document.createTextNode(message));
+    const container = document.querySelector('.container');
+    const form = document.querySelector('#book-form');
+    container.insertBefore(div, form);
+
+    // Hilangkan dalam 3 detik
+    setTimeout(() => document.querySelector('.alert').remove(), 3000);
+  }
 }
 
 // Store Class : Handles storage
@@ -62,19 +74,28 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
   const penulis = document.querySelector('#penulis').value;
   const nomorReg = document.querySelector('#nomorReg').value;
 
-  // Initiate Book
-  const buku = new Buku(judul, penulis, nomorReg);
+  // Validasi :
+  if(judul === "" || penulis === "" || nomorReg === "") {
+    UI.tampilAlert('Lengkapi form!', 'danger');
+  } else {
+    // Initiate Book
+    const buku = new Buku(judul, penulis, nomorReg);
+  
+    // Masukkan buku ke daftar
+    UI.addBookToList(buku);
 
-  // Masukkan buku ke daftar
-  UI.addBookToList(buku);
-
-  // Clear fields
-  UI.clearFields();
-
-
+    // Tampilkan jika berhasil
+    UI.tampilAlert('Buku berhasil ditambahkan', 'success');
+  
+    // Clear fields
+    UI.clearFields();
+  }
 });
 
 // Event : Remove Book
 document.querySelector('#book-list').addEventListener('click', (e) => {
   UI.deleteBuku(e.target);
+
+  // Tampilkan jika berhasil dihapus
+  UI.tampilAlert('Buku berhasil dihapus', 'warning');
 });
